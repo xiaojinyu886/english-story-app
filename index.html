@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>英语故事练习 · 阅读问答与复述</title>
+<style>
+:root{--bg:#f6f8fa;--card:#fff;--ink:#172b3a;--sub:#637584;--line:#dce6eb;--accent:#267562;--pale:#eaf5ef;--warn:#fff7e7}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font:15px/1.6 system-ui,-apple-system,"Microsoft YaHei",sans-serif;color:var(--ink)}
+.shell{max-width:1080px;margin:auto;padding:16px 16px 85px}.hero{background:linear-gradient(125deg,#1d655a,#3f9375);color:white;border-radius:22px;padding:24px;margin-bottom:14px}.hero h1{font-size:26px;margin:0 0 4px}.hero p{opacity:.9;margin:0}
+nav{display:flex;gap:8px;overflow:auto;margin:12px 0;padding-bottom:3px}nav button{white-space:nowrap}
+button{border:0;border-radius:11px;background:var(--accent);color:white;font:inherit;font-weight:650;padding:10px 16px;cursor:pointer}
+button.secondary{background:var(--pale);color:#185944}button.light{background:white;border:1px solid var(--line);color:#344a57}button:disabled{opacity:.5;cursor:not-allowed}
+nav button{background:#fff;border:1px solid var(--line);color:#49616d}nav button.active{background:var(--accent);color:white;border-color:var(--accent)}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;margin-bottom:14px;box-shadow:0 4px 18px #12372a07}
+h2{font-size:19px;margin:0 0 12px}h3{font-size:16px;margin:0 0 8px}.sub{color:var(--sub);font-size:13px}.note{background:var(--warn);border:1px solid #eedcb8;padding:10px 12px;border-radius:11px;font-size:13px}
+.flex{display:flex;align-items:center;gap:9px;flex-wrap:wrap}.spread{justify-content:space-between}.stack{display:grid;gap:12px}
+input,textarea,select{width:100%;border:1px solid #cdd9df;background:white;padding:11px;border-radius:10px;font:inherit;color:var(--ink)}textarea{min-height:235px;resize:vertical}label{display:block;font-weight:650;margin:8px 0 5px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}.row3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.hidden{display:none!important}.muted{color:var(--sub)}.tag{display:inline-block;border-radius:100px;padding:2px 10px;background:var(--pale);color:#1c6953;font-size:12px;font-weight:650}
+.qa{border:1px solid var(--line);padding:15px;border-radius:13px;background:#fff}.qa .question{font-size:17px;font-weight:700;margin:6px 0}
+.answer{color:#206c4f;background:#f0f8f3;padding:12px;border-radius:10px;margin-top:10px}.clue{background:#f8f4e8;border-radius:10px;padding:10px;margin:10px 0}
+.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.method-btn.active{background:var(--accent);color:white}.method-btn{background:#edf3f3;color:#3b5a5b}
+.reading{white-space:pre-wrap;line-height:2;font-size:16px;background:#f4f8f7;border-radius:12px;padding:18px}
+.controls{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.controls button{flex:1}
+.lesson{display:flex;justify-content:space-between;gap:10px;padding:13px;border:1px solid var(--line);border-radius:12px;align-items:center;margin:8px 0}
+footer{text-align:center;color:#81919a;font-size:12px;padding:22px}
+[role=status]{min-height:22px;color:#276d54;font-size:13px}
+@media(max-width:650px){.shell{padding:10px 10px 80px}.panel{padding:15px}.hero{padding:18px}.hero h1{font-size:21px}.cards,.row2,.row3{grid-template-columns:1fr}button{padding:10px 12px}}
+@media print{nav,.controls,#editor,#library,#settings,.hero button{display:none!important}body{background:white}.panel{box-shadow:none;border:0}}
+</style></head>
+<body><div class="shell">
+<header class="hero"><h1>📗 英语故事练习</h1><p>阅读 · 引导提问 · 开口回答 · 故事复述</p></header>
+<nav aria-label="导航"><button class="active" data-view="editor">✍️ 导入文章</button><button data-view="practice">🎤 互动问答</button><button data-view="retell">📖 故事复述</button><button data-view="library">📚 我的课程</button><button data-view="settings">⚙️ 设置</button></nav>
+<div id="editor" class="view">
+<section class="panel"><h2>输入你的英文故事</h2>
+<label for="title">课程名称</label><input id="title" value="A Picnic with Friends" placeholder="例如 Unit 1 A Picnic with Friends">
+<label for="source">英文原文</label><textarea id="source" spellcheck="false" placeholder="把英文故事粘贴到这里……"></textarea>
+<div class="row2"><div><label for="level">学习难度</label><select id="level"><option>小学低年级</option><option>小学高年级</option><option>初中</option></select></div>
+<div><label for="method">默认训练方式</label><select id="method"><option value="0">5W1H</option><option value="1">故事山</option><option value="2">SCOOP</option><option value="3">五指复述</option></select></div></div>
+<div class="controls"><button id="demoBtn" class="secondary">载入野餐示例</button><button id="generateBtn">✨ 生成问答与复述</button></div>
+<div class="note">示例教材提供人工校对过的问答；其他文章在免费本地模式下仅生成基础句式与原文摘录，不保证理解准确。AI模式可以生成更贴合文章的完整练习。</div>
+<p id="editStatus" role="status"></p></section></div>
+<div id="practice" class="view hidden"><section class="panel">
+<div class="flex spread"><h2>互动问答练习</h2><span class="tag" id="methodLabel">5W1H</span></div>
+<div class="flex" id="methodBtns"></div><p class="sub">训练规则：先回答问题 → 不会就看引导语 → 再看关键词 → 最后看答案。</p>
+<div class="flex spread"><span id="progress" class="sub">第 1 题</span><button id="speakQuestion" class="light">🔊 朗读问题</button></div>
+<div class="qa"><span id="category" class="tag"></span><div id="question" class="question"></div><div id="questionZh" class="sub"></div>
+<div id="guideBox" class="clue hidden"><b>家长引导：</b><span id="guide"></span></div>
+<div id="keywordBox" class="clue hidden"><b>关键词：</b><span id="keywords"></span></div>
+<div id="answerBox" class="answer hidden"><b>参考回答：</b><div id="answerText"></div><button id="speakAnswer" class="secondary" style="margin-top:8px">🔊 朗读答案</button></div></div>
+<div class="controls"><button class="light" id="guideBtn">① 家长引导</button><button class="light" id="keywordBtn">② 关键词</button><button class="secondary" id="answerBtn">③ 参考答案</button></div>
+<div class="controls"><button id="prevBtn" class="light">上一题</button><button id="nextBtn">下一题 →</button></div></section>
+<section class="panel"><h3>复习小技巧</h3><p class="sub">尽量让孩子回答完整句。例如不要只说 “Mia”，而要说 “Mia and Matt are in the story.”</p></section>
+</div>
+<div id="retell" class="view hidden">
+<section class="panel"><div class="flex spread"><h2>故事复述练习</h2><button id="readRetell" class="secondary">🔊 英文朗读</button></div>
+<label for="version">复述难度</label><select id="version"><option value="simple">基础版 · 约30秒</option><option value="standard" selected>标准版 · 约1分钟</option><option value="advanced">进阶版 · 约2分钟（视原文长度）</option></select>
+<h3 style="margin-top:16px">复述提示词</h3><div id="outline" class="reading"></div>
+<div class="controls"><button class="secondary" id="toggleRetell">显示参考复述</button><button class="light" id="copyRetell">复制内容</button></div>
+<div id="retellText" class="reading hidden"></div>
+<div id="retellZh" class="sub hidden" style="white-space:pre-wrap;margin-top:12px"></div>
+<h3 style="margin-top:20px">自己说一遍</h3><textarea id="selfRetell" placeholder="可手动输入孩子复述的文字；语音转文字需浏览器支持" style="min-height:100px"></textarea>
+<div class="controls"><button id="startDictation" class="secondary">🎙️ 开始语音输入</button><button id="stopDictation" class="light">停止录音</button><button id="savePractice" class="light">保存我的复述</button></div><p class="sub">语音输入依赖浏览器识别能力，部分设备不可用，也可能将语音发送给浏览器服务商处理；本应用不会把录音保存到服务器。</p>
+<p id="retellStatus" role="status"></p></section></div>
+<div id="library" class="view hidden"><section class="panel"><h2>我的课程</h2>
+<p class="sub">课程只保存在当前浏览器的本地存储中，不会跨设备同步。清除浏览器数据可能导致丢失。</p>
+<div id="lessonList"></div><div class="controls"><button id="saveLesson">💾 保存当前课程</button><button class="light" id="exportLessons">导出备份 JSON</button><label class="light" style="padding:10px 12px;border-radius:11px;cursor:pointer;border:1px solid var(--line)">导入备份 JSON<input type="file" id="importFile" accept="application/json,.json" hidden></label></div><p id="libraryStatus" role="status"></p></section></div>
+<div id="settings" class="view hidden"><section class="panel"><h2>生成设置</h2><label for="mode">生成方式</label><select id="mode"><option value="local">免费本地模式（基础句式、无AI）</option><option value="ai">AI 智能模式（需自己的 API）</option></select>
+<div id="aiFields" class="hidden"><div class="note" style="margin-top:10px">注意：纯静态网页无法安全保护 API Key。这里只建议个人临时测试；正式发布请使用有鉴权和限额的服务端代理。密钥不会保存。</div>
+<label for="endpoint">兼容 OpenAI Chat Completions 的 HTTPS 地址</label><input id="endpoint" value="https://api.openai.com/v1/chat/completions" spellcheck="false">
+<label for="model">模型名称</label><input id="model" placeholder="例如你可用的模型名">
+<label for="apiKey">API Key（本次会话使用）</label><input id="apiKey" type="password" autocomplete="off"></div>
+</section></div>
+<footer>English Story Coach · 单文件网页 · 无需安装 · 课程仅保存在本机浏览器</footer>
+</div>
+<script>
+'use strict';
+const $=id=>document.getElementById(id), methods=['5W1H','故事山','SCOOP','五指复述'];
+let result=null,selected=0,questionIndex=0,currentId=null,recognition=null;
+const demoText=`Mia and Matt want to go on a picnic.\n“Can we cook burgers in the woods, Mum?”\n“No, but you can take sandwiches and fruit.”\nMia likes egg sandwiches. Matt wants chocolate sandwiches. He wants lemonade too.\n“Would you like a banana or a watermelon?”\n“A banana, please,” says Mia.\n“A banana and a watermelon, please,” says Matt.\nNow they're in the woods. They've got sandwiches, fruit, lemonade and chocolate.\nBut what about the crumbs? “We don't need the scarecrow now,” says Matt. So Mia takes the scarecrow down.\n“But what's this? Birds! Hey! Go away!”\n“We need a scarecrow,” says Mia. They put the watermelon and some clothes on a stick. The birds don't like the scarecrow. They fly away!\nMia and Matt finish eating.`;
+const E=(category,q,zh,guide,keywords,a)=>({category,q,zh,guide,keywords,a});
+const demoQuestions=[
+[E('Who','Who is in the story?','故事中有谁？','Who wants to have a picnic? Can you name them?','Mia / Matt / Mum','Mia, Matt and their mum are in the story.'),
+ E('What','What do Mia and Matt want to do?','他们想做什么？','Are they going to school or going on a picnic?','go / picnic','They want to go on a picnic.'),
+ E('Where','Where do they have their picnic?','他们在哪里野餐？','Are they at home or in the woods?','in / woods','They have their picnic in the woods.'),
+ E('What','What food do they take?','他们带什么食物？','Can you name three kinds of food or drink?','sandwiches / fruit / lemonade','They take sandwiches, fruit and lemonade.'),
+ E('What','What does Mia like?','Mia喜欢什么？','What kind of sandwiches does Mia like?','egg sandwiches','Mia likes egg sandwiches.'),
+ E('Why','Why do they need a scarecrow?','他们为什么需要稻草人？','What comes to their picnic? What do they want to keep away?','birds / scare away','They need a scarecrow to scare the birds away.'),
+ E('How','How do they make the scarecrow?','他们怎样制作稻草人？','What do they put on a stick?','watermelon / clothes / stick','They put a watermelon and some clothes on a stick.'),
+ E('When','When does the picnic happen?','野餐发生在什么时候？','Does the story tell us the exact day or time?','not stated','The story does not say exactly when the picnic happens.')],
+[E('Beginning','How does the story begin?','故事如何开始？','What do Mia and Matt want to do?','want / picnic','Mia and Matt want to go on a picnic.'),
+ E('Development','What food do they choose?','他们选择了什么食物？','What does Mia like? What does Matt want?','egg / chocolate / fruit','Mia likes egg sandwiches, and Matt wants chocolate sandwiches. They also take fruit and lemonade.'),
+ E('Climax','What problem happens during the picnic?','野餐时发生了什么问题？','What comes when they are eating?','birds / arrive','Some birds come while they are having their picnic.'),
+ E('Falling Action','What do they do to solve the problem?','他们怎么解决问题？','Can they make something to keep the birds away?','make / scarecrow','They make a scarecrow with a watermelon and some clothes.'),
+ E('Ending','How does the story end?','故事怎样结束？','What happens to the birds? Do they finish eating?','fly away / finish','The birds fly away, and Mia and Matt finish eating.')],
+[E('Setting','Where does the story take place?','故事发生在哪里？','Which outdoor place do they visit?','woods','It takes place in the woods.'),
+ E('Characters','Who are the main characters?','主要人物有哪些？','Who goes on the picnic?','Mia / Matt','The main characters are Mia and Matt.'),
+ E('Order','What happens first?','首先发生了什么？','What do they want to do at the beginning?','want / picnic','First, Mia and Matt plan a picnic.'),
+ E('Order','What happens next?','接下来发生了什么？','What food and drink do they bring?','sandwiches / fruit / lemonade','Next, they take sandwiches, fruit and lemonade to the woods.'),
+ E('Oops!','What is the problem?','遇到了什么问题？','Who comes to the picnic?','birds','Some birds come to the picnic.'),
+ E('Problem Solved','How do they solve the problem?','如何解决问题？','What do they put on a stick?','scarecrow','They make a scarecrow, and the birds fly away.')],
+[E('Who','Who is the story about?','故事讲的是谁？','Say the two children’s names.','Mia / Matt','The story is about Mia and Matt.'),
+ E('Where','Where do they go?','他们去了哪里？','Do they go into the woods?','woods','They go to the woods for a picnic.'),
+ E('Problem','What problem happens?','有什么问题？','What animals come?','birds','Some birds come to their picnic.'),
+ E('How','How do they solve it?','怎么解决？','What do they make?','scarecrow','They make a scarecrow to keep the birds away.'),
+ E('Ending','How does it end?','结局如何？','What happens to the birds?','fly away','The birds fly away, and the children finish eating.')]];
+const demoRetell={
+simple:'Mia and Matt go on a picnic in the woods. They take sandwiches, fruit and lemonade. Some birds come. Mia and Matt make a scarecrow. The birds fly away. The children finish eating.',
+standard:'Mia and Matt want to go on a picnic in the woods. Their mum says they can take sandwiches and fruit. Mia likes egg sandwiches, and Matt wants chocolate sandwiches. They also take lemonade and a watermelon. During the picnic, some birds come. Mia says they need a scarecrow. They put a watermelon and some clothes on a stick. The birds do not like the scarecrow, so they fly away. In the end, Mia and Matt finish eating.',
+advanced:'Mia and Matt are excited about going on a picnic in the woods. At first, they ask their mum whether they can cook burgers there, but she tells them to bring sandwiches and fruit instead. Mia likes egg sandwiches, while Matt wants chocolate sandwiches and lemonade. They also take a banana and a watermelon. When they reach the woods, they enjoy their picnic, but an unexpected problem appears: some birds come close to their food. Mia has a clever idea. She and Matt make a scarecrow by putting a watermelon and some clothes on a stick. The birds dislike the scarecrow and fly away. At last, Mia and Matt are able to finish their picnic.',
+zh:'米娅和马特想去树林里野餐。他们带了三明治、水果和柠檬水。野餐时，有一些鸟飞来。他们用西瓜、衣服和木棍做了一个稻草人。鸟儿飞走了，米娅和马特终于吃完了食物。'};
+const makeDemo=()=>({methods:demoQuestions,retell:demoRetell,outline:['Who? Mia and Matt','Where? In the woods','What food? Sandwiches, fruit and lemonade','Problem? Some birds come','Solution? Make a scarecrow','Ending? Birds fly away; children finish eating'],mode:'curated'});
+function sentences(t){return (t.replace(/\r/g,' ').replace(/\n+/g,' ').match(/[^.!?。！？]+[.!?。！？]?/g)||[]).map(s=>s.trim()).filter(Boolean).slice(0,90)}
+function localGenerate(t){const ss=sentences(t);if(ss.length<2)throw Error('至少输入两句完整英文，才能进行练习。');const take=(index)=>ss[Math.min(Math.max(0,index),ss.length-1)],n=ss.length;
+const prompts=[
+['Who','Who is mentioned in the story?','故事中提到了谁？',0],
+['What','What happens at the beginning?','故事开头发生了什么？',0],
+['Where','Where does the story take place?','故事发生在哪里？',0],
+['When','When does the story happen?','故事发生在什么时候？',0],
+['Why','Why does the event happen?','事件为什么发生？',Math.floor(n/2)],
+['How','How does the story end?','故事怎样结束？',n-1]];
+const missing=(cat)=>cat==='Where'?'The exact place is not confirmed by this local generator.':cat==='When'?'The time is not confirmed by this local generator.':cat==='Why'?'The cause is not confirmed by this local generator.':null;
+const build=(cat,q,zh,i)=>E(cat,q,zh,'Look at the original sentence. Can you say it in your own words?','Find the key words in the text.',missing(cat)||take(i));
+const m0=prompts.map(x=>build(...x));
+const m1=[build('Beginning','How does the story begin?','故事怎么开始？',0),build('Development','What happens next?','后来发生了什么？',Math.floor(n*.25)),build('Climax','Which event could be the turning point?','哪个事件可能是转折点？',Math.floor(n*.5)),build('Falling Action','What happens after that?','接下来发生什么？',Math.floor(n*.75)),build('Ending','How does the story end?','故事怎么结束？',n-1)];
+const m2=[build('Setting','What background details are mentioned?','原文有哪些背景信息？',0),build('Characters','Who appears in the story?','故事里出现了谁？',0),build('Order','What happens first?','最先发生什么？',0),build('Order','What happens next?','接着发生什么？',Math.floor(n/2)),build('Problem','What might the problem be?','可能遇到什么问题？',Math.floor(n/2)),build('Solution','What happens near the end?','结尾附近发生了什么？',n-1)];
+const m3=[m0[0],m0[2],m2[4],m2[5],m1[4]];
+const summaries={simple:ss.slice(0,Math.min(3,n)).join(' '),standard:ss.slice(0,Math.min(7,n)).join(' '),advanced:ss.join(' ')};
+return {methods:[m0,m1,m2,m3],retell:{...summaries,zh:'本地生成不提供可靠的中文翻译；请结合原文核对。'},outline:['First: '+take(0),'Next: '+take(Math.floor(n/3)),'Then: '+take(Math.floor(2*n/3)),'Finally: '+take(n-1)],mode:'local'};}
+function promptAI(t){return `你是严谨的小学英语口语老师。严格依赖原文，不得编造。生成针对孩子的四套英文问答，每题包含 category, q (英文问题), zh (中文问题), guide (适合家长追问的英文引导语), keywords (英文关键词), a (完整英文回答)。分别：5W1H至少6题；故事山5题；SCOOP至少5题；五指复述5题。只依据原文回答，若细节不存在则明确说原文未说明。另提供基于原文三个难度的英文复述 simple (约30秒), standard (约1分钟), advanced (原文足够长时约2分钟，否则短一些) 及 zh (标准版中文译文)，以及 outline (4-7条英文提示)。返回严格 JSON：{"methods":[[{"category":"Who","q":"...","zh":"...","guide":"...","keywords":"...","a":"..."}],[...],[...],[...]],"retell":{"simple":"...","standard":"...","advanced":"...","zh":"..."},"outline":["..."]}。难度：${$('level').value}。原文：\n${t}`;}
+async function aiGenerate(t){const endpoint=$('endpoint').value.trim(),model=$('model').value.trim(),key=$('apiKey').value.trim();if(!/^https:\/\//.test(endpoint)&&!/^http:\/\/localhost(?::\d+)?\//.test(endpoint))throw Error('请填写 HTTPS API 地址');if(!key||!model)throw Error('请在设置中填写模型名和 API Key。');const res=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify({model,messages:[{role:'system',content:'Return a valid JSON object only.'},{role:'user',content:promptAI(t)}],temperature:0.2})});if(!res.ok)throw Error('AI请求失败，HTTP '+res.status);const payload=await res.json();const raw=payload.choices?.[0]?.message?.content;if(!raw)throw Error('API没有返回内容');const obj=JSON.parse(raw.replace(/^```(?:json)?\s*/,'').replace(/\s*```$/,''));validate(obj);obj.mode='ai';return obj;}
+function validate(x){if(!x||!Array.isArray(x.methods)||x.methods.length!==4||x.methods.some(v=>!Array.isArray(v)||!v.length||v.some(z=>!z.q||!z.a))||!x.retell?.standard)throw Error('生成数据不完整，请重试。')}
+function showView(name){document.querySelectorAll('.view').forEach(e=>e.classList.toggle('hidden',e.id!==name));document.querySelectorAll('nav button').forEach(e=>e.classList.toggle('active',e.dataset.view===name));if(name==='practice')drawQuestion();if(name==='retell')drawRetell();if(name==='library')drawLibrary()}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>showView(b.dataset.view));
+function loadDemo(){ $('title').value='A Picnic with Friends';$('source').value=demoText;result=makeDemo();currentId=null;selected=0;questionIndex=0;$('editStatus').textContent='已载入教材示例（配有人工整理的问答与复述）。';}
+$('demoBtn').onclick=loadDemo;
+$('generateBtn').onclick=async()=>{const t=$('source').value.trim();if(!t){$('editStatus').textContent='请先输入故事内容。';return}const btn=$('generateBtn');btn.disabled=true;$('editStatus').textContent='正在生成…';try{const isDemo=t===demoText.trim();result=$('mode').value==='ai'?await aiGenerate(t):(isDemo?makeDemo():localGenerate(t));validate(result);selected=Number($('method').value);questionIndex=0;currentId=null;$('editStatus').textContent='生成成功。';showView('practice')}catch(err){$('editStatus').textContent='生成失败：'+err.message}finally{btn.disabled=false}};
+function drawQuestion(){if(!result){$('question').textContent='请先到“导入文章”生成练习';return}const wrap=$('methodBtns');wrap.replaceChildren();methods.forEach((m,i)=>{const b=document.createElement('button');b.textContent=m;b.className='method-btn '+(selected===i?'active':'');b.onclick=()=>{selected=i;questionIndex=0;drawQuestion()};wrap.append(b)});
+const arr=result.methods[selected],q=arr[questionIndex]||arr[0];$('methodLabel').textContent=methods[selected];$('progress').textContent=`第 ${questionIndex+1} / ${arr.length} 题`;$('category').textContent=q.category||'Question';$('question').textContent=q.q;$('questionZh').textContent=q.zh||'';$('guide').textContent=q.guide||'What does the story tell us?';$('keywords').textContent=q.keywords||'请从原文找到关键词';$('answerText').textContent=q.a;
+['guideBox','keywordBox','answerBox'].forEach(id=>$(id).classList.add('hidden'));$('prevBtn').disabled=questionIndex===0;$('nextBtn').textContent=questionIndex===arr.length-1?'完成本组 ↻':'下一题 →'}
+$('guideBtn').onclick=()=>$('guideBox').classList.toggle('hidden');$('keywordBtn').onclick=()=>$('keywordBox').classList.toggle('hidden');$('answerBtn').onclick=()=>$('answerBox').classList.toggle('hidden');
+$('prevBtn').onclick=()=>{questionIndex=Math.max(0,questionIndex-1);drawQuestion()};$('nextBtn').onclick=()=>{questionIndex=(questionIndex+1)%result.methods[selected].length;drawQuestion()};
+function speak(text){if(!('speechSynthesis' in window)){alert('此浏览器暂不支持语音朗读');return}speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=0.85;speechSynthesis.speak(u)}
+$('speakQuestion').onclick=()=>{if(result)speak(result.methods[selected][questionIndex].q)};$('speakAnswer').onclick=()=>{if(result)speak(result.methods[selected][questionIndex].a)};
+function drawRetell(){if(!result){$('outline').textContent='请先生成练习内容。';return}$('outline').textContent=(result.outline||[]).join('\n');$('retellText').textContent=result.retell[$('version').value]||result.retell.standard;$('retellZh').textContent=result.retell.zh||'';$('retellText').classList.add('hidden');$('retellZh').classList.add('hidden');$('toggleRetell').textContent='显示参考复述'}
+$('version').onchange=drawRetell;$('toggleRetell').onclick=()=>{const hidden=$('retellText').classList.toggle('hidden');$('retellZh').classList.toggle('hidden',hidden);$('toggleRetell').textContent=hidden?'显示参考复述':'隐藏参考复述'};
+$('readRetell').onclick=()=>{if(result)speak(result.retell[$('version').value]||result.retell.standard)};
+$('copyRetell').onclick=async()=>{if(!result)return;const s=result.retell[$('version').value]||result.retell.standard;try{await navigator.clipboard.writeText(s);$('retellStatus').textContent='已复制'}catch{$('retellStatus').textContent='复制失败，请手动选择文本'}};
+$('startDictation').onclick=()=>{const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){$('retellStatus').textContent='当前浏览器不支持语音识别，请手动输入。';return}recognition=new SR();recognition.lang='en-US';recognition.continuous=true;recognition.interimResults=false;recognition.onresult=e=>{for(let i=e.resultIndex;i<e.results.length;i++)if(e.results[i].isFinal)$('selfRetell').value+=e.results[i][0].transcript+' '};recognition.onerror=e=>$('retellStatus').textContent='语音识别错误：'+e.error;try{recognition.start();$('retellStatus').textContent='正在听取英文复述…'}catch(e){$('retellStatus').textContent=e.message}};
+$('stopDictation').onclick=()=>{if(recognition)recognition.stop();$('retellStatus').textContent='已停止'};
+const storageKey='story-coach-lessons-v1';function readLessons(){try{return JSON.parse(localStorage.getItem(storageKey)||'[]')}catch{return []}}function writeLessons(v){localStorage.setItem(storageKey,JSON.stringify(v))}
+function saveLesson(){const text=$('source').value.trim(),title=$('title').value.trim()||'未命名课程';if(!text)throw Error('请输入课程原文');let records=readLessons();const id=currentId||('lesson-'+Date.now()+'-'+Math.random().toString(36).slice(2,7));const entry={id,title,text,result,practice:$('selfRetell').value,updated:new Date().toISOString()};const pos=records.findIndex(x=>x.id===id);if(pos>=0)records[pos]=entry;else records.unshift(entry);writeLessons(records);currentId=id;drawLibrary();return id}
+$('saveLesson').onclick=()=>{try{saveLesson();$('libraryStatus').textContent='课程已保存到当前浏览器。'}catch(e){$('libraryStatus').textContent=e.message}};
+$('savePractice').onclick=()=>{try{saveLesson();$('retellStatus').textContent='复述练习已保存。'}catch(e){$('retellStatus').textContent=e.message}};
+function drawLibrary(){let container=$('lessonList');container.replaceChildren();let records=readLessons();if(!records.length){const p=document.createElement('p');p.className='sub';p.textContent='暂时没有保存的课程。';container.append(p)}
+records.forEach(x=>{const row=document.createElement('div');row.className='lesson';const info=document.createElement('div');const b=document.createElement('b');b.textContent=x.title;const small=document.createElement('div');small.className='sub';small.textContent=new Date(x.updated).toLocaleString()+' · '+(x.result?'已生成':'仅保存原文');info.append(b,small);const actions=document.createElement('div');actions.className='flex';const open=document.createElement('button');open.className='secondary';open.textContent='打开';open.onclick=()=>{$('title').value=x.title;$('source').value=x.text;result=x.result||null;currentId=x.id;$('selfRetell').value=x.practice||'';selected=0;questionIndex=0;showView(x.result?'practice':'editor')};const del=document.createElement('button');del.className='light';del.textContent='删除';del.onclick=()=>{if(confirm('确定删除这门课程吗？')){writeLessons(readLessons().filter(y=>y.id!==x.id));if(currentId===x.id)currentId=null;drawLibrary()}};actions.append(open,del);row.append(info,actions);container.append(row)})}
+$('exportLessons').onclick=()=>{const records=readLessons();const blob=new Blob([JSON.stringify({format:'story-coach-v1',lessons:records},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='english_story_lessons.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};
+$('importFile').onchange=async e=>{const f=e.target.files?.[0];if(!f)return;try{const o=JSON.parse(await f.text());if(o.format!=='story-coach-v1'||!Array.isArray(o.lessons))throw Error('不是本应用的有效备份');const all=readLessons(),ids=new Set(all.map(x=>x.id));let added=0;for(const x of o.lessons){if(typeof x.text!=='string'||typeof x.title!=='string')continue;let id=x.id;if(ids.has(id)){id='import-'+Date.now()+'-'+added}ids.add(id);all.push({...x,id});added++}writeLessons(all);drawLibrary();$('libraryStatus').textContent=`追加导入 ${added} 门课程，原有课程未被覆盖。`}catch(err){$('libraryStatus').textContent='导入失败：'+err.message}e.target.value=''};
+$('mode').onchange=()=>$('aiFields').classList.toggle('hidden',$('mode').value!=='ai');
+loadDemo();drawLibrary();
+</script></body></html>
